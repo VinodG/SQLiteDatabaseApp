@@ -22,10 +22,13 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
     MyDatabase myDatabase =null;
     SQLiteDatabase db=null;
-    String str=null;
+    String str="name";
     ArrayList<String> list = new ArrayList<String>();
     ListView lv;
     ArrayAdapter<String> adapter =null;
+    private Boolean  isEnable=false;
+    private int recordNumber=100;
+    private int index=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,35 +48,62 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if(!TextUtils.isEmpty(str))
                 {
-                    ContentValues val= new ContentValues();
-                    val .put("id", Calendar.getInstance().getTimeInMillis());
-                    val .put("name", str);
-                    myDatabase.insert(val);
-
+                    StudentDO studentDO = new StudentDO();
+                    studentDO.id = index;
+                    studentDO.name = str ;
+                    studentDO.rollno = index;
+                    studentDO.salary = (double)index;
+                    isEnable =!isEnable;
+                    studentDO.setIsEnable(isEnable);
+                    index++;
+                    myDatabase.insert(studentDO, "id,name,rollno,salary,isEnable","id");
+                    ((EditText) findViewById(R.id.etInput)).setText("");
                 }
             }
         }).start();
-
-
-
     }
-
     public void readData(View view) {
-        final String PROVIDER_NAME = "com.vinod.contentproviderapp.MyProvider";
-        final String UrL = "content://" + PROVIDER_NAME + "/students";
-        list.clear();
-        Uri url = Uri.parse(UrL);
-//        Cursor cursor = managedQuery(url, new String[]{"name"}, null, null, null);
-        Cursor cursor = getContentResolver().query(url, new String[]{"name"}, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            do{
-                list.add(cursor.getString(0));
-            }
-            while ( cursor.moveToNext());
-        }
-        adapter.notifyDataSetChanged();
-
-
-
+//        myDatabase.getRecords(null);
+        myDatabase.getRecords("id,name");
     }
+
+//    public void saveData(View view)
+//    {
+//        str = ((EditText) findViewById(R.id.etInput)).getText().toString();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(!TextUtils.isEmpty(str))
+//                {
+//                    ContentValues val= new ContentValues();
+//                    val .put("id", Calendar.getInstance().getTimeInMillis());
+//                    val .put("name", str);
+//                    val .put("rollno", recordNumber);
+//                    val .put("salary", Double.parseDouble(recordNumber+""));
+//                    isEnable =!isEnable;
+//                    val .put("isEnable",isEnable);
+//                    recordNumber++;
+////                    myDatabase.insert(val);
+//                    myDatabase.insert(StudentDO object , String columnList ,String whereColumns)
+//                    ((EditText) findViewById(R.id.etInput)).setText("");
+//                }
+//            }
+//        }).start();
+//    }
+
+//    public void readData(View view) {
+//        final String PROVIDER_NAME = "com.vinod.contentproviderapp.MyProvider";
+//        final String UrL = "content://" + PROVIDER_NAME + "/students";
+//        list.clear();
+//        Uri url = Uri.parse(UrL);
+////        Cursor cursor = managedQuery(url, new String[]{"name"}, null, null, null);
+//        Cursor cursor = getContentResolver().query(url, new String[]{"name"}, null, null, null);
+//        if (cursor != null && cursor.moveToFirst()) {
+//            do{
+//                list.add(cursor.getString(0));
+//            }
+//            while ( cursor.moveToNext());
+//        }
+//        adapter.notifyDataSetChanged();
+//    }
 }
