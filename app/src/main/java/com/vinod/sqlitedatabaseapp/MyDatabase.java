@@ -119,8 +119,8 @@ public class MyDatabase extends SQLiteOpenHelper {
                         statement.bindLong(startingIndex+i+1,(int) field.get(object));
                         break;
                     case LONG:
-                    statement.bindLong(startingIndex+i+1,(long) field.get(object));
-                    break;
+                        statement.bindLong(startingIndex+i+1,(long) field.get(object));
+                        break;
                     case FLOAT:
                         statement.bindDouble(startingIndex+i+1,(float) field.get(object));
                         break;
