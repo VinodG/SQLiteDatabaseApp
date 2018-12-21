@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if(!TextUtils.isEmpty(str))
                 {
+                    EmployeeDO emp = new EmployeeDO();
+                    emp.id = index;
+
                     StudentDO studentDO = new StudentDO();
                     studentDO.id = index;
                     studentDO.name = str ;
@@ -56,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
                     isEnable =!isEnable;
                     studentDO.setIsEnable(isEnable);
                     index++;
-                    myDatabase.insert(studentDO, "id,name,rollno,salary,isEnable","id");
+//                    myDatabase.insert(studentDO, "id,name,rollno,salary,isEnable","id");
+                    myDatabase.insert(emp, "id,name,rollno,salary,isEnable,column1,column2,column3,column4,column5," +
+                            "column6,column7,column8,column9,column10","id");
                     ((EditText) findViewById(R.id.etInput)).setText("");
                 }
             }
@@ -64,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
     }
     public void readData(View view) {
 //        myDatabase.getRecords(null);
-        myDatabase.getRecords("id,name");
+//        myDatabase.getRecords("id,name");
+//        myDatabase. getRecords(new StudentDO(), null);
+        myDatabase. getRecords(new EmployeeDO(), null);
     }
 
 //    public void saveData(View view)

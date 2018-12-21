@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 
 public class MyDatabase extends SQLiteOpenHelper {
-    private static final String TABLE_NAME = "student";
+    private static   String TABLE_NAME = "student";
     String TAG = "MyDatabase";
     enum DATA_TYPE
     {
@@ -34,6 +34,9 @@ public class MyDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase)
     {
         sqLiteDatabase.execSQL("create table student(id INTEGER PRIMARY KEY AUTOINCREMENT ,name varchar,rollno integer, salary real,isEnable integer )");
+        sqLiteDatabase.execSQL("create table employee(id INTEGER PRIMARY KEY AUTOINCREMENT ,name varchar,rollno integer, salary real,isEnable integer," +
+                "column1 varchar,column2 varchar, column3 varchar, column4 varchar, column5 Integer , column6 Real, column7 varchar, column8 varachar ," +
+                "column9 varchar, column10 integer  )");
         log("table is created ");
     }
 
@@ -53,7 +56,7 @@ public class MyDatabase extends SQLiteOpenHelper {
         log("Record is inserted ");
 
     }
-    public void insert(StudentDO object , String columnList ,String whereColumns) {
+    public void insert(Object object , String columnList ,String whereColumns) {
         String arrColumns[] = columnList.split(",");
         String arrWhereColumns[] = whereColumns.split(",");
         String values = " ";
@@ -63,6 +66,7 @@ public class MyDatabase extends SQLiteOpenHelper {
             values = values + " ?,";
         }
         columnListToUpdate = removeLastChar(columnListToUpdate);
+         TABLE_NAME = getTableName(object);
         columnListToUpdate = "UPDATE " + TABLE_NAME + " SET " + columnListToUpdate + " WHERE ";
 
         for (int i = 0; i < arrWhereColumns.length; i++) {
@@ -148,6 +152,47 @@ public class MyDatabase extends SQLiteOpenHelper {
         str = str.substring(0,str.length()-1);
         return str;
     }
+    public  ArrayList<Object>   getRecords(Object object,String ColumnNames) {
+        ArrayList<Object> list = new ArrayList<Object>();
+        SQLiteDatabase db = getReadableDatabase();
+        if(TextUtils.isEmpty(ColumnNames))
+            ColumnNames = " * ";
+        final Cursor cursor = db.rawQuery("SELECT  "+ColumnNames+" FROM "+getTableName(object)+" ", null);
+        int sum = 0;
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    do {
+                        Object objectNew = new Object();
+                        for (int i = 0; i < cursor.getColumnCount(); i++) {
+                            Object obj = getType(objectNew,cursor.getColumnName(i),cursor);
+                            setField(objectNew, cursor.getColumnName(i), obj );
+                        }
+                        list.add(objectNew);
+                    } while (cursor.moveToNext());
+
+                }
+            }catch (Exception e )
+            {
+                e.printStackTrace();
+            }finally {
+                cursor.close();
+            }
+        }
+        Log.e("Result " , " size of list "+list.size());
+        return  list;
+    }
+
+    private String getTableName(Object object) {
+        if(object instanceof  StudentDO && object.getClass().getFields().length ==new StudentDO().getClass().getFields().length)
+            return "student";
+        else  if(object instanceof  BaseStudentDO && object.getClass().getFields().length == new BaseStudentDO().getClass().getFields().length)
+            return "student";
+        else  if(object instanceof  EmployeeDO && object.getClass().getFields().length ==new EmployeeDO().getClass().getFields().length)
+            return "employee";
+        else
+            return "student";
+    }
 
     public  ArrayList<StudentDO>   getRecords(String ColumnNames) {
         ArrayList<StudentDO> list = new ArrayList<StudentDO>();
@@ -178,9 +223,6 @@ public class MyDatabase extends SQLiteOpenHelper {
         }
         Log.e("Result " , " size of list "+list.size());
         return  list;
-
-
-
 
     }
 
@@ -214,6 +256,8 @@ public class MyDatabase extends SQLiteOpenHelper {
                 return  DATA_TYPE.LONG;
             else  if(dataTypeName.toLowerCase().equalsIgnoreCase("double"))
                 return DATA_TYPE.DOUBLE;
+            else  if(dataTypeName.toLowerCase().equalsIgnoreCase("float"))
+                return DATA_TYPE.FLOAT;
             else  if(dataTypeName.toLowerCase().equalsIgnoreCase("boolean"))
                 return DATA_TYPE.BOOLEAN;
         } catch (NoSuchFieldException e) {
