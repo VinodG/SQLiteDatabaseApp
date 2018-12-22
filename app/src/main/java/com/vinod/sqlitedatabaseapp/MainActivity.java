@@ -1,23 +1,21 @@
 package com.vinod.sqlitedatabaseapp;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import com.vinod.sqlitedatabaseapp.dbaccess.MyDatabase;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
     MyDatabase myDatabase =null;
@@ -27,17 +25,20 @@ public class MainActivity extends AppCompatActivity {
     ListView lv;
     ArrayAdapter<String> adapter =null;
     private Boolean  isEnable=false;
-    private int recordNumber=100;
+    private int recordNumber=1;
     private int index=1;
+    private EditText et;
+    private long start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lv=(ListView)findViewById(R.id.listView);
+        et = ((EditText) findViewById(R.id.etInput));
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,list);
         lv.setAdapter(adapter);
-        myDatabase = new MyDatabase(this, "contacts",null,1);
+        myDatabase = new MyDatabase(this, "contacts.sqlite",null,1);
     }
 
     public void saveData(View view)
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!TextUtils.isEmpty(str))
                 {
                     EmployeeDO emp = new EmployeeDO();
-                    emp.id = index;
+                    emp.id = recordNumber;
 
                     StudentDO studentDO = new StudentDO();
                     studentDO.id = index;
@@ -59,19 +60,49 @@ public class MainActivity extends AppCompatActivity {
                     isEnable =!isEnable;
                     studentDO.setIsEnable(isEnable);
                     index++;
-//                    myDatabase.insert(studentDO, "id,name,rollno,salary,isEnable","id");
-                    myDatabase.insert(emp, "id,name,rollno,salary,isEnable,column1,column2,column3,column4,column5," +
-                            "column6,column7,column8,column9,column10","id");
-                    ((EditText) findViewById(R.id.etInput)).setText("");
+                    recordNumber++;
+//                    myDatabase.insert(studentDO, "id");
+//                    myDatabase.insert(emp, "id,name,rollno,salary,isEnable,column1,column2,column3,column4,column5," +
+//                            "column6,column7,column8,column9,column10","id");
+                    Vector<EmployeeDO> vec = new Vector<EmployeeDO>();
+                    for (int i = 0;i<1000;i++) {
+                        EmployeeDO e = new EmployeeDO();
+                        e.id = recordNumber;
+                        e.name = "name"+recordNumber++;
+                        vec.add(e);
+                    }
+                    startCounting();
+
+                    myDatabase.openTransaction();
+                    boolean isExecuted = myDatabase.insert(vec, "id");
+                    if(isExecuted)
+                        myDatabase.commitTranscation();
+                    myDatabase.closeTransaction();
+                    endCounting();
+                    et.setText("");
                 }
             }
         }).start();
     }
+
+    private void endCounting() {
+        Log.e("WRITE","Time Elapsed - "+(Calendar.getInstance().getTimeInMillis()-start));
+    }
+
+    private void startCounting() {
+        start = Calendar.getInstance().getTimeInMillis();
+    }
+
     public void readData(View view) {
 //        myDatabase.getRecords(null);
 //        myDatabase.getRecords("id,name");
 //        myDatabase. getRecords(new StudentDO(), null);
-        myDatabase. getRecords(new EmployeeDO(), null);
+        startCounting();
+//        Vector <EmployeeDO> vec  = myDatabase. getRecords(new EmployeeDO(), null);
+//        Vector <EmployeeDO> vec = myDatabase.getRecordUsingQuery(new EmployeeDO(),"select * from employee  where id < "+et.getText().toString());
+        Vector <EmployeeDO> vec = myDatabase.getRecordUsingQuery(new EmployeeDO(),"select * from employee  where id <  21000");
+        endCounting();
+        Log.e("Got Result ", vec.size()+"" );
     }
 
 //    public void saveData(View view)
