@@ -369,14 +369,14 @@ public class ComplexDatabaseAccess extends SQLiteOpenHelper {
     public  void   insetUpdateDeleteQuery(Object object,   OPERATION_TYPE type,String insertUpdateDeleteQueryWithQuestionMarks,String variableNamesToBeBind) {
         if(!isTranscational)
             openDataBase();
-        if(object instanceof Vector) {
-            if (((Vector) object).size() > 0)
-                TABLE_NAME = getTableName(((Vector) object).get(0));
-        }else if(object instanceof ArrayList) {
-            if (((ArrayList) object).size() > 0)
-                TABLE_NAME = getTableName(((ArrayList) object).get(0));
-        } else
-            TABLE_NAME =getTableName(object);
+//        if(object instanceof Vector) {
+//            if (((Vector) object).size() > 0)
+//                TABLE_NAME = getTableName(((Vector) object).get(0));
+//        }else if(object instanceof ArrayList) {
+//            if (((ArrayList) object).size() > 0)
+//                TABLE_NAME = getTableName(((ArrayList) object).get(0));
+//        } else
+//            TABLE_NAME =getTableName(object);
         if(insertUpdateDeleteQueryWithQuestionMarks==null)
         {
             return;
@@ -384,25 +384,25 @@ public class ComplexDatabaseAccess extends SQLiteOpenHelper {
         else
         {
             String arrWhereColumns[] = variableNamesToBeBind.split(",");
-            SQLiteStatement insertQuery = _database.compileStatement(insertUpdateDeleteQueryWithQuestionMarks);
+            SQLiteStatement query = _database.compileStatement(insertUpdateDeleteQueryWithQuestionMarks);
             Log.e("Insert-Update-Delete",insertUpdateDeleteQueryWithQuestionMarks+"");
             if(object instanceof Vector )
             {
                 for(int i = 0 ;i<((Vector)object).size();i++)
                 {
-                    bindValues(insertQuery, arrWhereColumns, ((Vector)object).get(i), 0,false);
-                    executeStatementBasedOnType(type,insertQuery);
+                    bindValues(query, arrWhereColumns, ((Vector)object).get(i), 0,false);
+                    executeStatementBasedOnType(type,query);
                 }
             }else if(object instanceof ArrayList)
             {
                 for(int i = 0 ;i<((ArrayList)object).size();i++)
                 {
-                    bindValues(insertQuery, arrWhereColumns, ((ArrayList)object).get(i), 0,false);
-                    executeStatementBasedOnType(type,insertQuery);
+                    bindValues(query, arrWhereColumns, ((ArrayList)object).get(i), 0,false);
+                    executeStatementBasedOnType(type,query);
                 }
             }else {
-                bindValues(insertQuery, arrWhereColumns, object, 0, false);
-                executeStatementBasedOnType(type,insertQuery);
+                bindValues(query, arrWhereColumns, object, 0, false);
+                executeStatementBasedOnType(type,query);
             }
         }
     }

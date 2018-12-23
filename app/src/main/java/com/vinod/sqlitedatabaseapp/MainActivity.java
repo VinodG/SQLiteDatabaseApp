@@ -58,9 +58,9 @@ public class MainActivity extends AppCompatActivity {
 //                    myDatabase.insert(emp, "id,name,rollno,salary,isEnable,column1 as column10 ","id");
 //                    boolean isExecuted = myDatabase.insert(com, "id");
 
-                    Vector<StudentDO> vecStd=  DataUtils.getStudentDO();// StudentDO -- Vector
+//                    Vector<StudentDO> vecStd=  DataUtils.getStudentDO();// StudentDO -- Vector
                     Vector<EmployeeDO> vecEmp =DataUtils.getEmployeeDO();// EmployeeDO -- Vector
-                    Vector<ComplexDO> vecmplx= DataUtils.getComplexDO();//CombinedDo -- vector
+//                    Vector<ComplexDO> vecmplx= DataUtils.getComplexDO();//CombinedDo -- vector
 
                     startCounting();
 //                    myDatabase.openTransaction();

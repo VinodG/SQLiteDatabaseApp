@@ -3,7 +3,7 @@ package com.vinod.sqlitedatabaseapp;
 import java.util.Vector;
 
 public class DataUtils {
-    private static int recordNumber;
+    public static int recordNumber;
     private static boolean isEnable;
     private static int VEC_SIZE =10;
 
