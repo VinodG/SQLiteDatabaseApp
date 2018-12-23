@@ -1,4 +1,4 @@
-package com.vinod.sqlitedatabaseapp.dbaccess;
+package com.vinod.sqlitedatabaseapp.dbaccess.second;
 
 public final class AppConstants {
     public static final int GET = 1;

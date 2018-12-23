@@ -8,6 +8,7 @@
     tools:context="com.vinod.sqlitedatabaseapp.MainActivity">
     <EditText
         android:id="@+id/etInput"
+        android:hint="Id name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="saveData"
@@ -24,14 +25,30 @@
         android:id="@+id/btReadFromProvider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Read From Provider"
+        android:text="Read All"
         android:onClick="readData"
         />
 
 
+    <Button
+        android:id="@+id/btDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete based on Id"
+        android:onClick="deleteData"
+        />
+    <Button
+        android:id="@+id/btUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update based on Id"
+        android:onClick="updateData"
+        />
 
-    <ListView
-        android:id="@+id/listView"
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
          />

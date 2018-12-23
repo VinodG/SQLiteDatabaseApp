@@ -6,12 +6,12 @@ public class BaseStudentDO {
     public int rollno  ;
     public double salary;
 
-    public    int  isEnable  ;
+    public    boolean  isEnable  ;
 
-    public boolean  getIsEnable() {
-        return isEnable ==0? false: true;
-    }
-    public void   setIsEnable(boolean enableOrNot  ) {
-        isEnable = enableOrNot?1:0;
-    }
+//    public boolean  getIsEnable() {
+//        return isEnable ==0? false: true;
+//    }
+//    public void   setIsEnable(boolean enableOrNot  ) {
+//        isEnable = enableOrNot?1:0;
+//    }
 }

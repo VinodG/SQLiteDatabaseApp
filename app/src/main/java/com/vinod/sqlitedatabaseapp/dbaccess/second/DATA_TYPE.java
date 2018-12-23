@@ -1,4 +1,4 @@
-package com.vinod.sqlitedatabaseapp.dbaccess;
+package com.vinod.sqlitedatabaseapp.dbaccess.second;
 
 public enum DATA_TYPE
 {
