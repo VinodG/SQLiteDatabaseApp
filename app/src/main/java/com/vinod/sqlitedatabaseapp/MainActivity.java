@@ -1,5 +1,7 @@
 package com.vinod.sqlitedatabaseapp;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,16 +9,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 
-import com.vinod.sqlitedatabaseapp.dbaccess.first.SimpleDatabaseAccess;
 import com.vinod.sqlitedatabaseapp.dbaccess.second.ComplexDatabaseAccess;
 import com.vinod.sqlitedatabaseapp.dbaccess.second.OPERATION_TYPE;
+import com.vinod.sqlitedatabaseapp.dbpreview.TablePreviewDialog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Vector;
 
@@ -76,9 +76,15 @@ public class MainActivity extends AppCompatActivity {
 //                        myDatabase.commitTranscation();
 //                    }
 //                    myDatabase.closeTransaction();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            et.setText("");
+                            readData(view);
+                        }
+                    });
                     endCounting();
-                    et.setText("");
-                    readData(view);
+
                 }
             }
         }).start();
@@ -107,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
     }
+
+
     private void endCounting() {
         Log.e("WRITE","Time Elapsed - "+(Calendar.getInstance().getTimeInMillis()-start));
     }
@@ -170,8 +178,38 @@ public class MainActivity extends AppCompatActivity {
         et.setText("");
     }
 
+    public void dataBasePreview(View view) {
+//        Intent intent = new Intent(this,DatabasePreviewActivity.class);
+//        startActivity(intent);
+        TablePreviewDialog dialog = new TablePreviewDialog(this);
+//        Window window = dialog.getWindow();
+//        WindowManager.LayoutParams wlp = window.getAttributes();
+//
+//        wlp.gravity = Gravity.CENTER;
+//        wlp.flags &= ~WindowManager.LayoutParams.FLAG_BLUR_BEHIND;
+//        window.setAttributes(wlp);
+//        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
-//    public void saveData(View view)
+         dialog.show();
+    }
+
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //in manifest and below lines of code, few things are addded to hide functionality of navigation bar
+        ActivityManager activityManager = (ActivityManager) getApplicationContext()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        activityManager.moveTaskToFront(getTaskId(), 0);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.e("KEYCODE",keyCode+"");
+        return super.onKeyDown(keyCode, event);
+    }
+    //    public void saveData(View view)
 //    {
 //        str = ((EditText) findViewById(R.id.etInput)).getText().toString();
 //        new Thread(new Runnable() {

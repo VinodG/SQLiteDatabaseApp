@@ -629,6 +629,62 @@ public class ComplexDatabaseAccess extends SQLiteOpenHelper {
             isTranscational = false;
         }
     }
+    public   Vector<DictionaryEntry[]> get(String query_str)
+    {
+        DictionaryEntry dir = null;
+        String[] columns;
+        int index;
+        int rowIndex = 0;
+        DictionaryEntry[] row_obj = null; //An array of columns and their values
+//        DictionaryEntry[][] data_arr = null;
+        Vector<DictionaryEntry[]> data_arr = null;
+        Cursor c = null;
+        openDataBase();
+
+        if (_database != null) {
+            try {
+                c = _database.rawQuery(query_str, null);
+                if (c.moveToFirst()) {
+                    rowIndex = 0;
+                    data_arr = new Vector<DictionaryEntry[]>();
+//                    data_arr = new DictionaryEntry[c.getCount()][];
+                    do {
+                        columns = c.getColumnNames();
+                        row_obj = new DictionaryEntry[columns.length]; //(columns.length);
+                        for (int i = 0; i < columns.length; i++) {
+                            dir = new DictionaryEntry();
+                            dir.key = columns[i];
+                            index = c.getColumnIndex(dir.key);
+                            if (dir.key.equals("barcode") || dir.key.equals("ImageLarge")) {
+                                dir.value = c.getBlob(index);
+                            } else
+                                dir.value = c.getString(index);
+                            row_obj[i] = dir;
+                        }
+                        data_arr.add(row_obj);
+                        rowIndex++;
+                    }
+                    while (c.moveToNext());
+                }
+                if (c != null && !c.isClosed())
+                    c.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (c != null && !c.isClosed())
+                    c.close();
+                if(_database!=null && _database.isOpen())
+                    _database.close();
+            }
+        }
+        return data_arr;
+
+    }
+    public class DictionaryEntry {
+        public String key;
+        public Object value;
+    }
+
 
 
 
